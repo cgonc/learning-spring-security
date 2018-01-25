@@ -11,26 +11,25 @@ import com.cgonul.poc.springsecurity.basics.persistence.UserRepository;
 import com.cgonul.poc.springsecurity.basics.web.model.User;
 
 @SpringBootApplication
-@ComponentScan("com.cgonul")
+@ComponentScan ("com.cgonul")
 public class Application {
 
-    @Bean
-    public UserRepository userRepository() {
-        return new InMemoryUserRepository();
-    }
+	interface StringUserConverter extends Converter<String, User> {
+		//https://stackoverflow.com/questions/25711858/spring-cant-determine-generic-types-when-lambda-expression-is-used-instead-of-a
+	}
 
-    @Bean
-    public Converter<String, User> messageConverter() {
-        return new Converter<String, User>() {
-            @Override
-            public User convert(String id) {
-                return userRepository().findUser(Long.valueOf(id));
-            }
-        };
-    }
+	@Bean
+	public UserRepository userRepository() {
+		return new InMemoryUserRepository();
+	}
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Application.class, args);
-    }
+	@Bean
+	public StringUserConverter messageConverter() {
+		return id -> userRepository().findUser(Long.valueOf(id));
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
 }
