@@ -1,1 +1,0 @@
-##A simple application with custom login page, a logout mechanism and in memory authentication.
